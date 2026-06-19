@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Frankenmerge — Workflow</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d0d0d; color: #ccc; font-family: 'Courier New', monospace; padding: 2rem; }
+  h1 { color: #00ff44; font-size: 1.4rem; letter-spacing: 0.12em; margin-bottom: 0.25rem; }
+  .subtitle { color: #444; font-size: 0.75rem; margin-bottom: 2.5rem; }
+  h2 { color: #4a4aaa; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin: 2.5rem 0 1rem; border-bottom: 1px solid #1a1a1a; padding-bottom: 0.5rem; }
+  .diagram { background: #111; border: 1px solid #1a1a1a; border-radius: 6px; padding: 1.5rem; margin-bottom: 1rem; overflow-x: auto; }
+  .mermaid { display: flex; justify-content: center; }
+  .mermaid svg { max-width: 100%; height: auto; }
+</style>
+</head>
+<body>
+<h1>⚡ FRANKENMERGE</h1>
+<p class="subtitle">Application Workflow — open this file in any browser</p>
+
+<h2>Game Flow</h2>
+<div class="diagram">
+<pre class="mermaid">
+%%{init: {'theme': 'dark'}}%%
+flowchart TD
+    A([Open Browser]) --> B[Join Screen\nroom code · name · role]
+    B --> C{Role?}
+    C -->|Host| D[Host View\ncreature + git graph\nround controls]
+    C -->|Player| E[Player View\nbranch buttons\ncommand log]
+    D <-->|WebSocket / PartyKit| E
+    D --> F[Next Round →]
+    F --> G{Round?}
+    G -->|1| R1[Torso only\nunlocks everything]
+    G -->|2| R2[Head · Left Arm · Right Arm\nparallel merges]
+    G -->|3| R3[Legs · Feet\nchained — foot rejects\nuntil leg is merged]
+    G -->|4| R4[Hands — Conflict Round]
+    G -->|5| R5[Shoes — Chaos Round]
+    R1 --> MERGE
+    R2 --> MERGE
+    R3 --> MERGE
+    MERGE[Player: git merge branch] --> V{canMerge?\nparent in main?}
+    V -->|yes| ATTACH[Part attaches\nred seam appears]
+    V -->|no| FLOAT[Part floats\norange · off-position]
+    R4 --> CT[Player clicks hand branch\nSTART_CONFLICT action]
+    CT --> CS[Conflict Screen overlay\ngit conflict markers\n&lt;&lt;&lt; HEAD / === / &gt;&gt;&gt;]
+    CS --> RC[Players resolve together\nRESOLVE_CONFLICT action]
+    RC --> ATTACH
+    R5 --> CB[Host: Trigger Chaos Event\nTRIGGER_CHAOS action]
+    CB --> RU[Player buttons change to\ngit rebase --onto foot main shoe]
+    RU --> RA[REBASE action]
+    RA --> ATTACH
+    ATTACH --> VT{validateTree\nall 12 parts\ncorrectly attached?}
+    VT -->|no| WAIT[Keep playing]
+    VT -->|yes| ALIVE[IT'S ALIVE!\nSuperlatives Screen]
+    ALIVE --> SUP[First to the Lab\nMost Prolific Surgeon\nHeroic Conflict Resolution\nMaster Rebaser · Final Stitch]
+    SUP --> AGAIN[Play Again → Reset]
+    AGAIN --> B
+</pre>
+</div>
+
+<h2>State Machine</h2>
+<div class="diagram">
+<pre class="mermaid">
+%%{init: {'theme': 'dark'}}%%
+stateDiagram-v2
+    [*] --> Lobby : open app
+    Lobby --> Playing : join room
+    state Playing {
+        [*] --> Round1
+        Round1 --> Round2 : host Next Round
+        Round2 --> Round3 : host Next Round
+        Round3 --> Round4 : host Next Round
+        Round4 --> Round5 : host Next Round
+        state Round4 {
+            [*] --> HandAvailable
+            HandAvailable --> Conflicted : START_CONFLICT
+            Conflicted --> HandMerged : RESOLVE_CONFLICT
+        }
+        state Round5 {
+            [*] --> ChaosIdle
+            ChaosIdle --> ChaosActive : TRIGGER_CHAOS (host)
+            ChaosActive --> ShoeRebased : REBASE
+        }
+    }
+    Playing --> Alive : validateTree passes
+    Alive --> Lobby : Reset / Play Again
+</pre>
+</div>
+
+<h2>Data Flow</h2>
+<div class="diagram">
+<pre class="mermaid">
+%%{init: {'theme': 'dark'}}%%
+sequenceDiagram
+    participant P as Player (browser)
+    participant PK as PartyKit Server
+    participant H as Host (browser)
+    P->>PK: JOIN → receives current GameState
+    H->>PK: JOIN → receives current GameState
+    P->>PK: MERGE { branch, playerId }
+    PK->>PK: gameReducer → new state
+    PK->>P: STATE broadcast
+    PK->>H: STATE broadcast
+    Note over H: Host clicks Next Round
+    H->>PK: NEXT_ROUND
+    PK->>P: STATE broadcast
+    PK->>H: STATE broadcast
+    Note over P: Round 4 — hand branch
+    P->>PK: START_CONFLICT { branch }
+    PK->>P: STATE (conflicts: [branch])
+    PK->>H: STATE (conflicts: [branch])
+    Note over P,H: ConflictScreen overlay appears for all
+    P->>PK: RESOLVE_CONFLICT { branch }
+    PK->>P: STATE (merged: [..., branch])
+    PK->>H: STATE (merged: [..., branch])
+    Note over H: Round 5 — host triggers chaos
+    H->>PK: TRIGGER_CHAOS
+    PK->>P: STATE (chaosTriggered: true)
+    PK->>H: STATE (chaosTriggered: true)
+    P->>PK: REBASE { branch }
+    PK->>P: STATE (merged: [..., branch], isAlive: true)
+    PK->>H: STATE (merged: [..., branch], isAlive: true)
+    Note over P,H: SuperlativesScreen overlay appears
+</pre>
+</div>
+
+<h2>Part Dependency Tree</h2>
+<div class="diagram">
+<pre class="mermaid">
+%%{init: {'theme': 'dark'}}%%
+graph TD
+    main --> torso
+    torso --> head
+    torso --> left-arm
+    torso --> right-arm
+    torso --> left-leg
+    torso --> right-leg
+    left-arm --> left-hand
+    right-arm --> right-hand
+    left-leg --> left-foot
+    right-leg --> right-foot
+    left-foot --> left-shoe
+    right-foot --> right-shoe
+    style left-hand fill:#2a0a2a,color:#cc88ff,stroke:#8844aa
+    style right-hand fill:#2a0a2a,color:#cc88ff,stroke:#8844aa
+    style left-shoe fill:#2a1400,color:#ff9844,stroke:#884400
+    style right-shoe fill:#2a1400,color:#ff9844,stroke:#884400
+</pre>
+</div>
+
+<p style="color:#333;font-size:0.65rem;margin-top:2rem;">Purple = conflict parts (Round 4) · Orange = rebase parts (Round 5)</p>
+
+<script>mermaid.initialize({ startOnLoad: true, theme: 'dark' })</script>
+</body>
+</html>
