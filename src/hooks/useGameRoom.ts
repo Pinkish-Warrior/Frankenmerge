@@ -34,8 +34,22 @@ export function useGameRoom(roomId: string, playerId: string) {
     send({ type: 'MERGE', branch, playerId })
   }, [send, playerId])
 
+  const startConflict = useCallback((branch: PartId) => {
+    send({ type: 'START_CONFLICT', branch, playerId })
+  }, [send, playerId])
+
+  const resolveConflict = useCallback((branch: PartId) => {
+    send({ type: 'RESOLVE_CONFLICT', branch, playerId })
+  }, [send, playerId])
+
+  const triggerChaos = useCallback(() => send({ type: 'TRIGGER_CHAOS' }), [send])
+
+  const rebase = useCallback((branch: PartId) => {
+    send({ type: 'REBASE', branch, playerId })
+  }, [send, playerId])
+
   const nextRound = useCallback(() => send({ type: 'NEXT_ROUND' }), [send])
   const reset = useCallback(() => send({ type: 'RESET' }), [send])
 
-  return { state, merge, nextRound, reset }
+  return { state, merge, startConflict, resolveConflict, triggerChaos, rebase, nextRound, reset }
 }
