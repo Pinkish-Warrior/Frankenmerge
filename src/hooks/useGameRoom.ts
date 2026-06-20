@@ -3,9 +3,9 @@ import PartySocket from 'partysocket'
 import { INITIAL_STATE, type GameAction, type GameState } from '../engine/state'
 import type { PartId } from '../engine/tree'
 
-const PARTYKIT_HOST = import.meta.env.DEV
-  ? 'localhost:1999'
-  : (import.meta.env.VITE_PARTYKIT_HOST as string)
+const PARTYKIT_HOST =
+  new URLSearchParams(window.location.search).get('pk') ??
+  (import.meta.env.DEV ? 'localhost:1999' : (import.meta.env.VITE_PARTYKIT_HOST as string))
 
 export function useGameRoom(roomId: string, playerId: string) {
   const [state, setState] = useState<GameState>(INITIAL_STATE)

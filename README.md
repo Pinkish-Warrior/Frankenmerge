@@ -168,6 +168,60 @@ main
 
 ---
 
+## Classroom / LAN Setup
+
+For running with a group of students on the same WiFi, the preferred approach is to keep all traffic local. If the network blocks it, fall back to the cloud deployment.
+
+### Find your local IP
+
+```bash
+# macOS
+ipconfig getifaddr en0
+# Linux
+hostname -I | awk '{print $1}'
+```
+
+### Option 1 — Local (preferred)
+
+Two terminals on the presenter's machine:
+
+```bash
+# Terminal 1 — PartyKit server
+npx partykit dev
+
+# Terminal 2 — frontend (bound to all interfaces so students can reach it)
+npx vite --host
+```
+
+Hand students this URL (replace with your actual IP):
+
+```
+http://192.168.1.x:5173/?pk=192.168.1.x:1999
+```
+
+The `?pk=` parameter tells the app to connect to your local PartyKit server instead of the cloud. All traffic stays on the LAN — no internet required.
+
+### Option 2 — Cloud fallback
+
+If the network blocks local connections, switch to the deployed app:
+
+```bash
+npx partykit deploy
+```
+
+Then hand students the deployed URL (no `?pk=` param needed — it uses the cloud server automatically).
+
+### Switching on the fly
+
+No rebuild is needed to switch between local and cloud. The `?pk=` URL parameter overrides everything:
+
+| Scenario | URL to share |
+|---|---|
+| Local LAN | `http://<your-ip>:5173/?pk=<your-ip>:1999` |
+| Cloud fallback | `https://<your-deployed-app>` |
+
+---
+
 ## Known Issues
 
 - Production build fails — TypeScript strict mode conflicts with PartyKit server typings. Dev server (`npx vite`) works fine.
