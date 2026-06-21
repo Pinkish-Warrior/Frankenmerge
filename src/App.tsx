@@ -34,6 +34,11 @@ export default function App() {
 function HostView({ session, onLeave }: { session: Session; onLeave: () => void }) {
   const { state, nextRound, reset, triggerChaos } = useGameRoom(session.roomId, session.playerId)
 
+  const roundParts = partsForRound(state.currentRound)
+  const remaining = roundParts.filter(p => !state.merged.includes(p.id))
+  const roundComplete = remaining.length === 0
+  const canAdvance = roundComplete && state.currentRound < 5
+
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', height: '100vh' }}>
       {/* Left: creature */}
@@ -54,7 +59,21 @@ function HostView({ session, onLeave }: { session: Session; onLeave: () => void 
                 ⚠ Chaos active
               </span>
             )}
-            <button onClick={nextRound} style={smallBtn('#0a0a2a', '#4444aa', '#aaaaff')}>Next Round →</button>
+            {!roundComplete && (
+              <span style={{ fontSize: '0.65rem', color: '#666', padding: '0.35rem 0.5rem', border: '1px solid #222', borderRadius: 4 }}>
+                waiting: {remaining.map(p => p.id).join(', ')}
+              </span>
+            )}
+            <button
+              onClick={nextRound}
+              disabled={!canAdvance}
+              title={!roundComplete ? `Merge remaining parts first: ${remaining.map(p => p.id).join(', ')}` : state.currentRound === 5 ? 'Final round' : ''}
+              style={{
+                ...smallBtn('#0a0a2a', canAdvance ? '#4444aa' : '#222', canAdvance ? '#aaaaff' : '#444'),
+                cursor: canAdvance ? 'pointer' : 'not-allowed',
+                opacity: canAdvance ? 1 : 0.5,
+              }}
+            >Next Round →</button>
             <button onClick={reset} style={smallBtn('#1a0a0a', '#661111', '#ff8888')}>Reset</button>
             <button onClick={onLeave} style={smallBtn('#111', '#333', '#666')}>Leave</button>
           </div>
