@@ -120,13 +120,13 @@ torso
    └─ right-foot
 ```
 
-### Round 4 — Merge Conflict *(stretch goal, not in this submission)*
+### Round 4 — Merge Conflict *(interactive resolution UI built; conflict is scripted, not yet derived from two real diverging submissions — see Known Issues)*
 
 **Parts:** Left Hand, Right Hand
 
-Two players are assigned the same hand branch with different versions. Merging both creates a conflict. Players resolve it together using a conflict-marker UI — the same structure as a real git conflict file.
+Merging a hand branch triggers a conflict-resolution screen with real conflict-marker syntax (`<<<<<<< / ======= / >>>>>>>`) and "Accept Ours" / "Accept Theirs" buttons that resolve the merge. The resolution UX is fully working; the two-players-diverging-on-the-same-branch setup it's meant to model isn't implemented yet — any single merge attempt triggers a pre-written conflict.
 
-### Round 5 — Rebase Chaos Event *(future work, out of scope for this submission)*
+### Round 5 — Rebase Chaos Event *(not implemented — out of scope for this submission)*
 
 **Parts:** Left Shoe, Right Shoe
 
@@ -224,4 +224,5 @@ No rebuild is needed to switch between local and cloud. The `?pk=` URL parameter
 
 ## Known Issues
 
-- Round 4 (conflict) and Round 5 (rebase chaos) show a concept card but the interactive mechanics are not yet built. Round 5 is out of scope for this submission; Round 4 is a stretch goal.
+- Round 4's conflict-resolution screen is fully interactive, but the conflict itself is scripted rather than arising from two players actually submitting diverging versions of the same branch — any single merge attempt on a hand branch triggers a pre-written "ours vs. theirs" conflict.
+- Round 5's `TRIGGER_CHAOS` flag and `REBASE` action exist, but no code path forces a branch onto the wrong parent to create the floating state the rebase is meant to fix — `REBASE` currently behaves identically to a normal merge, just relabeled. Out of scope for this submission; left as future work.
