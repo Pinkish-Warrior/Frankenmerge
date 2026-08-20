@@ -1,3 +1,4 @@
+// AI-assisted: drafted with AI tool, reviewed and modified by Tania Santana
 import { useState } from 'react'
 import { JoinScreen, type Mode } from './components/JoinScreen'
 import { CreatureView } from './components/CreatureView'

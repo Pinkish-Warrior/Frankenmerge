@@ -1,3 +1,4 @@
+// AI-assisted: drafted with AI tool, reviewed and modified by Tania Santana
 import { PARTS_BY_ID, type PartId } from './tree'
 
 export type AttachStatus = 'unmerged' | 'attached' | 'floating'

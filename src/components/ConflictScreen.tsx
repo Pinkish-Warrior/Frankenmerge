@@ -1,3 +1,4 @@
+// AI-assisted: drafted with AI tool, reviewed and modified by Tania Santana
 import type { PartId } from '../engine/tree'
 
 // Simulated conflict content for each conflicted part

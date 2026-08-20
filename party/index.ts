@@ -1,3 +1,4 @@
+// AI-assisted: drafted with AI tool, reviewed and modified by Tania Santana
 import type * as Party from 'partykit/server'
 import { gameReducer, INITIAL_STATE, type GameAction, type GameState } from '../src/engine/state'
 

@@ -1,3 +1,4 @@
+// AI-assisted: drafted with AI tool, reviewed and modified by Tania Santana
 import { useEffect, useState, useRef, useCallback } from 'react'
 import PartySocket from 'partysocket'
 import { INITIAL_STATE, type GameAction, type GameState } from '../engine/state'

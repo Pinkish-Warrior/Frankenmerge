@@ -1,3 +1,4 @@
+// AI-assisted: drafted with AI tool, reviewed and modified by Tania Santana
 import { attachStatus } from '../engine/state'
 import { PARTS_BY_ID, type PartId } from '../engine/tree'
 

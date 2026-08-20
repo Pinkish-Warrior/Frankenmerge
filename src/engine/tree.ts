@@ -1,3 +1,4 @@
+// AI-assisted: drafted with AI tool, reviewed and modified by Tania Santana
 export type PartId =
   | 'torso'
   | 'head'

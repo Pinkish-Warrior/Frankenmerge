@@ -1,3 +1,4 @@
+// AI-assisted: drafted with AI tool, reviewed and modified by Tania Santana
 import type { MergeEvent } from '../engine/state'
 
 interface Superlative {
