@@ -120,13 +120,13 @@ torso
    └─ right-foot
 ```
 
-### Round 4 — Merge Conflict *(coming in Day 3)*
+### Round 4 — Merge Conflict *(stretch goal, not in this submission)*
 
 **Parts:** Left Hand, Right Hand
 
 Two players are assigned the same hand branch with different versions. Merging both creates a conflict. Players resolve it together using a conflict-marker UI — the same structure as a real git conflict file.
 
-### Round 5 — Rebase Chaos Event *(coming in Day 3)*
+### Round 5 — Rebase Chaos Event *(future work, out of scope for this submission)*
 
 **Parts:** Left Shoe, Right Shoe
 
@@ -224,5 +224,4 @@ No rebuild is needed to switch between local and cloud. The `?pk=` URL parameter
 
 ## Known Issues
 
-- Production build fails — TypeScript strict mode conflicts with PartyKit server typings. Dev server (`npx vite`) works fine.
-- Round 4 (conflict) and Round 5 (rebase chaos) show a concept card but the interactive mechanics are not yet built.
+- Round 4 (conflict) and Round 5 (rebase chaos) show a concept card but the interactive mechanics are not yet built. Round 5 is out of scope for this submission; Round 4 is a stretch goal.
