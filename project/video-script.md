@@ -11,10 +11,10 @@ Static title card (or spoken while a title slide is up) showing, exactly as CS50
 ```
 Frankenmerge
 Tania Santana
-GitHub: <YOUR_GITHUB_USERNAME>
-edX: <YOUR_EDX_USERNAME>
-<YOUR_CITY>, <YOUR_COUNTRY>
-Recorded: <RECORDING_DATE>
+GitHub: Pinkish-Warrior
+edX: tRosa1975
+London, UK
+Recorded: 2026-08-21
 ```
 
 No voiceover needed here — let it sit on screen for the full 5–10 sec so it's clearly readable.
