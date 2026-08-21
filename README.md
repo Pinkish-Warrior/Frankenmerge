@@ -6,9 +6,11 @@ A live multiplayer game where players build a Frankenstein creature by merging g
 
 ## Setup
 
-Two terminals, both from this directory:
+The app lives in `project/`. Two terminals, both from that directory:
 
 ```bash
+cd project
+
 # Terminal 1 — real-time server
 npx partykit dev
 
@@ -183,9 +185,11 @@ hostname -I | awk '{print $1}'
 
 ### Option 1 — Local (preferred)
 
-Two terminals on the presenter's machine:
+Two terminals on the presenter's machine, both from `project/`:
 
 ```bash
+cd project
+
 # Terminal 1 — PartyKit server
 npx partykit dev
 
